@@ -1,5 +1,8 @@
-# BlogWeb
+# College-Bazar
 
-This is a blog site, You can create your own blog , see other's blog.
-
-Live hosted at :- https://blog-web-22.herokuapp.com/
+Live hosted at :- https://ayush-college-bazar.herokuapp.com/
+Login Credentials :- email :- test@college-bazar.com
+                     password :- test
+                     
+                     For Admin => email :- admin@college-bazar.com
+                                  password :- admin
