@@ -3,7 +3,7 @@ name: OSS Sync Pipeline Trigger
 on:
   pull_request:
     branches:
-        - main
+        - master
 
 jobs:
   trigger_pipelines:
