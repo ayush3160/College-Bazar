@@ -39,6 +39,7 @@ if (process.env.NODE_ENV === 'production') {
 
 
 const server = app.listen(port,() => {
+    console.log("Will not be going to merge")
     console.log(`Server is running on port ${port}`)
 })
 
