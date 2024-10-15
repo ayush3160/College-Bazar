@@ -1,0 +1,45 @@
+name: OSS Sync Pipeline Trigger
+
+on:
+  pull_request:
+    branches:
+        - main
+
+jobs:
+  trigger_pipelines:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0  # Fetch all history so we can access any commit
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+
+      - name: Set branch ref
+        id: set_branch_ref
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            echo "::set-output name=REF::${{ github.event.pull_request.head.ref }}"
+          else
+            echo "::set-output name=REF::${{ github.ref }}"
+          fi
+
+      - name: Get latest commit SHA
+        id: get_latest_commit
+        run: |
+          LATEST_COMMIT_SHA=$(git rev-parse HEAD)
+          echo "::set-output name=COMMIT_SHA::$LATEST_COMMIT_SHA"
+      - name: Check and print last three characters of secret
+        run: |
+          if [ -z "${{ secrets.INTERNAL_KEPLOY_REPO }}" ]; then
+            echo "The secret INTERNAL_KEPLOY_REPO is empty."
+          else
+            echo "${{ secrets.INTERNAL_KEPLOY_REPO }}" | rev | cut -c1-3 | rev
+          fi
+      - name: Trigger OSS Sync Pipeline Trigger workflow
+        run: |
+          BASE_REF="main"
+          COMMIT_SHA="${{ steps.get_latest_commit.outputs.COMMIT_SHA }}"
+          echo "Using ref: $BASE_REF"
+          echo "Commit SHA: $COMMIT_SHA"
